@@ -8,7 +8,6 @@ const sinon = require('sinon');
 const workerHandler = require('../worker/worker_controller.js');
 const script = require('../worker/scripts/scenario');
 
-// WORKER: Job Execution
 describe('Worker', () => {
   describe('handleJob function', () => {
     // Worker executes job with the provided "script"
@@ -20,7 +19,7 @@ describe('Worker', () => {
 
     }));
     // Worker executes all the jobs it was provided
-    it('should execute all jobs it was provided', sinon.test((done) => {
+    it('should post to the end point provided to ask for work', sinon.test((done) => {
       // const checkCompletion = this.spy(workerHandler, 'handleJob');
       // const testJob = [ 1, 2, 3 ];
       // // Feed in jobs number
