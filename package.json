@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development nodemon master/master.js",
+    "start": "NODE_ENV=development nodemon worker/worker.js",
     "test": "NODE_ENV=development mocha --reporter nyan tests/testSetup.js \"tests/**/**/*.spec.js\""
   },
   "repository": {
@@ -18,8 +18,10 @@
     "chai": "^3.5.0",
     "dockerode": "^2.2.10",
     "dotenv": "^2.0.0",
+    "jsonwebtoken": "^7.0.1",
     "knex": "^0.11.7",
     "mysql": "^2.11.1",
+    "pegjs": "^0.9.0",
     "request": "^2.72.0",
     "require": "^2.4.20",
     "sinon": "^1.17.4"

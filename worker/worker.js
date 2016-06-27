@@ -7,11 +7,19 @@ const request = require('request');
 
 // Modules
 const workerController = require('./worker_controller.js');
+const environment = require('dotenv');
+
+// Set environment variables file
+if (process.env.NODE_ENV === 'development') {
+  environment.config({ path: './env/development.env' });
+} else if (process.env.NODE_ENV === 'production') {
+  environment.config({ path: './env/production.env' });
+}
 
 // Global Variables: Need to update with correct port number
 const port = process.env.port || 8001;
 // TODO - To figure out correct IP Address to master
-const masterIPAddress = 'CHRIS_TO_UPDATE';
+const masterIPAddress = 'localhost:8000/api/CHRIS_TO_UPDATE';
 
 // Start Express Server
 const app = express();
