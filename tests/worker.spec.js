@@ -11,6 +11,10 @@ const script = require('../worker/scripts/scenario');
 describe('Worker', () => {
   describe('handleJob function', () => {
     // Worker executes job with the provided "script"
+    it('should perform a POST request to master when spun up', (done) => {
+
+    });
+
     it('should execute job with provided script', sinon.test((done) => {
       const testScript = this.spy(script);
       workerhandler.handleJob(100, testScript);
