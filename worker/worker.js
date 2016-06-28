@@ -34,15 +34,6 @@ app.set('port', port);
 // Middleware
 app.use(bodyParser.json());
 
-// Respond to POST request from Master
-// app.post('/api/worker', workerController);
-
-// Respond to cancellation POST request from Master
-// app.post('/api/cancel', workerController.cancel);
-
-// Respond to wind down POST request from Master
-// app.post('/api/shutDown', workerController.shutDown);
-
 // Server listens at specified port
 app.listen(app.get('port'), () => {
   console.log(`Worker server listening to port ${app.get('port')}`);
