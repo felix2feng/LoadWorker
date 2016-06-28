@@ -5,6 +5,7 @@
   "main": "worker.js",
   "scripts": {
     "start": "NODE_ENV=development nodemon worker/worker.js",
+    "start_prod": "NODE_ENV=production nodemon worker/worker.js",
     "test": "NODE_ENV=development mocha --reporter nyan tests/testSetup.js \"tests/**/**/*.spec.js\""
   },
   "repository": {

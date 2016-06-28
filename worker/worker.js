@@ -17,9 +17,18 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Global Variables: Need to update with correct port number
-const port = process.env.port || 8001;
+const port = process.env.PORT || 8001;
+
 // TODO - To figure out correct IP Address to master
-const masterIPAddress = 'localhost:8000/api/CHRIS_TO_UPDATE';
+console.log('masterhost', process.env.MASTER_HOST);
+
+let masterUrl = '';
+
+if (process.env.MASTER_HOST === '') {
+  masterUrl = 'http://localhost:8000/api/requestJob';
+} else {
+  masterUrl = process.env.MASTER_HOST + ':' + process.env.MASTER_PORT + '/api/requestJob';
+}
 
 // Start Express Server
 const app = express();
@@ -40,11 +49,17 @@ app.use(bodyParser.json());
 // Server listens at specified port
 app.listen(app.get('port'), () => {
   console.log(`Worker server listening to port ${app.get('port')}`);
-  console.log('This is the IP Address I will post to', masterIPAddress);
-  request.post(masterIPAddress, (error, response, body) => {
+  console.log('This is the IP Address I will post to', masterUrl);
+  request.post(masterUrl, (error, response, body) => {
     if (error) {
       console.log(error);
     }
-    workerController.handleJob(JSON.parse(body).job);
+    console.log('body', body);
+    if (body === 'done') {
+      console.log('No jobs received from server');
+      process.exit();
+    } else {
+      workerController.handleJob(JSON.parse(body).job);
+    }
   });
 });
