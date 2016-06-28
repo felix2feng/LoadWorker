@@ -2,7 +2,7 @@
   "name": "loadworker",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "worker.js",
   "scripts": {
     "start": "NODE_ENV=development nodemon worker/worker.js",
     "test": "NODE_ENV=development mocha --reporter nyan tests/testSetup.js \"tests/**/**/*.spec.js\""
@@ -15,7 +15,6 @@
     "bluebird": "^3.4.1",
     "body-parser": "^1.15.1",
     "bookshelf": "^0.9.5",
-    "chai": "^3.5.0",
     "dotenv": "^2.0.0",
     "knex": "^0.11.7",
     "mysql": "^2.11.1",
