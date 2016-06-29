@@ -58,4 +58,5 @@ app.listen(app.get('port'), () => {
     } else {
       workerController.handleJob(JSON.parse(body).job);
     }
-  })
+  });
+});
