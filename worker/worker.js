@@ -46,6 +46,8 @@ app.listen(app.get('port'), () => {
     if (body === 'done') {
       console.log('No jobs received from server');
       process.exit();
+    } else if (body === undefined) {
+      console.log('Body from master server is undefined');
     } else {
       workerController.handleJob(JSON.parse(body).job);
     }
