@@ -9,7 +9,8 @@ const saveActionResultsToDB = (actionsResults, job) => {
       statusCode: actionsResults[i].statusCode,
       elapsedTime: actionsResults[i].elapsedTime,
       id_scenario: job.scenarioID,
-      // Consider saving down type of request as well
+      dataSizeInBytes: actionsResults[i].dataSizeInBytes,
+      httpVerb: actionsResults[i].httpVerb,
     };
     const newAction = new Action(actionData);
     newAction.save()

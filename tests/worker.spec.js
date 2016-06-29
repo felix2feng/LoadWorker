@@ -28,7 +28,7 @@ describe('Worker', () => {
       done();
     });
 
-    it('should save all items to the database', (done) => {
+    it('should save all Actions to the database', (done) => {
       const actionsData = [
         { 
           path: '/api/key', 
@@ -51,30 +51,50 @@ describe('Worker', () => {
       Action.fetchAll()
       .then(results => {
         expect(results.length).to.equal(actionsDataLength);
+        for (var i = 0; i < results.length; i++) {
+          expect(results[i].path).to.equal(actionsData[i].path);
+          expect(results[i].statusCode).to.equal(actionsData[i].statusCode);
+          expect(results[i].elapsedTime).to.equal(actionsData[i].elapsedTime);
+          expect(results[i].dataSizeInBytes).to.equal(actionsData[i].dataSizeInBytes);
+          expect(results[i].httpVerb).to.equal(actionsData[i].httpVerb);
+        }
       });
       done();
     });
   });
 
   describe('saveSpawnsToDB', () => {
+    
+    after(done => {
+      Spawn.where('totalTime', 3).destroy();
+      done();
+    });
+
     it('should save all items to the database', (done) => {
-      // 
+      const runResultsData = {
+        scenarioTime: 3,
+        transactionTimes: [],
+      };
+
+      helpers.saveSpawnsToDB(runResultsData, dummyJob);
+      Spawn.fetchAll()
+      .then(results => {
+        expect(results.length).to.equal(runResultsData.length);
+        expect(results.path).to.equal(runResultsData.path);
+        expect(results.statusCode).to.equal(runResultsData.statusCode);
+        expect(results.elapsedTime).to.equal(runResultsData.elapsedTime);
+      });      
       done();
     });
   });
 
-  describe('responseFromMasterCallback', () => {
-    it('should shut off if body is done', (done) => {
-      // 
+  xdescribe('responseFromMasterCallback', () => {
+    it('should call handleJob if there are remaining jobs', (done) => {
       done();
     });
 
-    it('should call the callback if there are remaining jobs', (done) => {
-      // 
+    it('should exit if the master responds with done', (done) => {
       done();
     });
   });
 });
-
-
-
