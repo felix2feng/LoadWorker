@@ -49,6 +49,7 @@ const parse = (str) => {
   try {
     return parser.parse(str.trim());
   } catch (err) {
+    console.log('error parsing', str.trim());
     console.log('error parsing', err.message, 'at line', err.location.start.line,
       ', column', err.location.start.column);
     return undefined;
@@ -144,7 +145,13 @@ env.get = (modifiers, path) => {
     }, modifiers.cookies)
     .then((res) => {
       // console.log(res);
-      modifiers.transactionTimes.push([path, res.statusCode, res.elapsedTime, res.scenario_length]);
+      modifiers.transactionTimes.push({
+        path,
+        statusCode: res.statusCode,
+        elapsedTime: res.elapsedTime,
+        dataSizeInBytes: res.scenario_length,
+        httpVerb: 'GET',
+      });
       resolve(modifiers);
     })
     .catch((err) => {
@@ -163,7 +170,13 @@ env.post = (modifiers, path) => {
       url: site + path,
     }, modifiers.cookies)
     .then((res) => {
-      modifiers.transactionTimes.push([path, res.statusCode, res.elapsedTime, res.scenario_length]);
+      modifiers.transactionTimes.push({
+        path,
+        statusCode: res.statusCode,
+        elapsedTime: res.elapsedTime,
+        dataSizeInBytes: res.scenario_length,
+        httpVerb: 'POST',
+      });
       resolve(modifiers);
     })
     .catch((err) => {
@@ -198,7 +211,13 @@ env.login = (modifiers, path, data) => {
     })
     .then((res) => {
       modifiers.cookies = j;
-      modifiers.transactionTimes.push([path, res.statusCode, res.elapsedTime, res.scenario_length]);
+      modifiers.transactionTimes.push({
+        path,
+        statusCode: res.statusCode,
+        elapsedTime: res.elapsedTime,
+        dataSizeInBytes: res.scenario_length,
+        httpVerb: 'POST',
+      });
       resolve(modifiers);
     })
     .catch((err) => {
