@@ -33,7 +33,7 @@ const handleJob = jobs => {
     runresults: {
       scenarioTime: timeToRunScenarioInMilliseconds,
       transactionTimes: [
-        [path, statusCode, elapsedTime, dataSizeInBytes, 'GET'],
+        {path, statusCode, elapsedTime, dataSizeInBytes, 'GET'},
       ]
     }
     */

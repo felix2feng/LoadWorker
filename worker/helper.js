@@ -9,6 +9,7 @@ const saveActionResultsToDB = (actionsResults, job) => {
       statusCode: actionsResults[i].statusCode,
       elapsedTime: actionsResults[i].elapsedTime,
       id_scenario: job.scenarioID,
+      // Consider saving down type of request as well
     };
     const newAction = new Action(actionData);
     newAction.save()
@@ -40,6 +41,7 @@ const responseFromMasterCallback = (error, response, body) => {
   if (error) {
     console.error(error);
   } else if (body === 'done') {
+    // Shut off if no jobs are available
     console.log('Jobs completed is ', jobsCompleted);
     process.exit();
   } else {
