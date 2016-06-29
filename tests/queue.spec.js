@@ -21,7 +21,6 @@ describe('Queue', () => {
     testQueue.addToQueue(1);
     testQueue.addToQueue(2);
     testQueue.addToQueue(3);
-    console.log('taking next:', testQueue.takeNext());
     expect(testQueue.takeNext()).to.equal(1);
     expect(testQueue.checkLength()).to.equal(2);
     done();
