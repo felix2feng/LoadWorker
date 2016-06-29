@@ -15,13 +15,11 @@ const Action = require('../models/ActionsModel');
 const Spawn = require('../models/SpawnsModel');
 
 describe('Worker', () => {
-  
   const dummyJob = {
     scenarioID: 2,
   }
 
   describe('saveActionResultsToDB', () => {
-
     after(done => {
       Action.where('statusCode', 200).destroy();
       Action.where('statusCode', 400).destroy();
@@ -30,18 +28,18 @@ describe('Worker', () => {
 
     it('should save all Actions to the database', (done) => {
       const actionsData = [
-        { 
-          path: '/api/key', 
-          statusCode: 200, 
-          elapsedTime: 3, 
-          dataSizeInBytes: 2, 
+        {
+          path: '/api/key',
+          statusCode: 200,
+          elapsedTime: 3,
+          dataSizeInBytes: 2,
           httpVerb: 'GET',
         },
-        { 
-          path: '/api/key', 
-          statusCode: 400, 
-          elapsedTime: 4, 
-          dataSizeInBytes: 3, 
+        {
+          path: '/api/key',
+          statusCode: 400,
+          elapsedTime: 4,
+          dataSizeInBytes: 3,
           httpVerb: 'POST',
         },
       ];
@@ -51,7 +49,7 @@ describe('Worker', () => {
       Action.fetchAll()
       .then(results => {
         expect(results.length).to.equal(actionsDataLength);
-        for (var i = 0; i < results.length; i++) {
+        for (let i = 0; i < results.length; i++) {
           expect(results[i].path).to.equal(actionsData[i].path);
           expect(results[i].statusCode).to.equal(actionsData[i].statusCode);
           expect(results[i].elapsedTime).to.equal(actionsData[i].elapsedTime);
@@ -64,7 +62,6 @@ describe('Worker', () => {
   });
 
   describe('saveSpawnsToDB', () => {
-    
     after(done => {
       Spawn.where('totalTime', 3).destroy();
       done();
@@ -83,7 +80,7 @@ describe('Worker', () => {
         expect(results.path).to.equal(runResultsData.path);
         expect(results.statusCode).to.equal(runResultsData.statusCode);
         expect(results.elapsedTime).to.equal(runResultsData.elapsedTime);
-      });      
+      });
       done();
     });
   });
