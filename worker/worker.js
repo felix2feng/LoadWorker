@@ -4,9 +4,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
-
-// Modules
-const workerController = require('./worker_controller.js');
 const environment = require('dotenv');
 
 // Set environment variables file
@@ -15,6 +12,9 @@ if (process.env.NODE_ENV === 'development') {
 } else if (process.env.NODE_ENV === 'production') {
   environment.config({ path: './env/production.env' });
 }
+
+// Modules
+const workerController = require('./worker_controller.js');
 
 // Global Variables: Need to update with correct port number
 const port = process.env.PORT || 5000;
