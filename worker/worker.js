@@ -24,7 +24,7 @@ let masterUrl = '';
 if (process.env.NODE_ENV === 'development') {
   masterUrl = 'http://127.0.0.1:2000/api/requestJob';
 } else if (process.env.NODE_ENV === 'production') {
-  masterUrl = process.env.PROTOCOL + process.env.MASTERHOST_PORT_1000_TCP_ADDR + ':' + process.env.MASTER_PORT + '/api/requestJob';
+  masterUrl = process.env.PROTOCOL + process.env.MASTERHOST_PORT_2000_TCP_ADDR + ':' + process.env.MASTER_PORT + '/api/requestJob';
 }
 
 // Start Express Server
