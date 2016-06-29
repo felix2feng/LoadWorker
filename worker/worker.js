@@ -17,17 +17,14 @@ if (process.env.NODE_ENV === 'development') {
 const workerController = require('./worker_controller.js');
 
 // Global Variables: Need to update with correct port number
-const port = process.env.PORT || 8001;
-
-// TODO - To figure out correct IP Address to master
-console.log('masterhost', process.env.MASTER_HOST);
+const port = process.env.PORT || 5000;
 
 let masterUrl = '';
 
-if (process.env.MASTER_HOST === '') {
-  masterUrl = 'http://localhost:8000/api/requestJob';
-} else {
-  masterUrl = process.env.MASTER_HOST + ':' + process.env.MASTER_PORT + '/api/requestJob';
+if (process.env.NODE_ENV === 'development') {
+  masterUrl = 'http://127.0.0.1:2000/api/requestJob';
+} else if (process.env.NODE_ENV === 'production') {
+  masterUrl = process.env.PROTOCOL + process.env.MASTERHOST_PORT_2000_TCP_ADDR + ':' + process.env.MASTER_PORT + '/api/requestJob';
 }
 
 // Start Express Server
