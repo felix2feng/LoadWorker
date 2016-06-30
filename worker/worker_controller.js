@@ -57,8 +57,21 @@ const handleJob = (jobs, masterUrl) => {
     body: results,
   });
 
+  const responseFromMasterCallback = (error, response, body) => {
+    if (error) {
+      console.error(error);
+    } else if (body === 'done') {
+      // Shut off if no jobs are available
+      console.log('Jobs completed is ', jobsCompleted);
+      process.exit();
+    } else {
+      // Recursively ask for more work if available
+      handleJob(JSON.parse(body).job, masterUrl);
+    }
+  };
+
   // Request more work from master
-  request.post(requestUrl, helpers.responseFromMasterCallback);
+  request.post(requestUrl, responseFromMasterCallback);
 };
 
 module.exports = { handleJob, jobsCompleted };

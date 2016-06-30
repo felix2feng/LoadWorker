@@ -1,6 +1,16 @@
 const Action = require('../models/ActionsModel');
 const Spawn = require('../models/SpawnsModel');
-const { handleJob, jobsCompleted } = require('../worker/worker_controller');
+const workerController = require('./worker_controller');
+
+let masterUrl = '';
+
+if (process.env.NODE_ENV === 'development') {
+  masterUrl = 'http://127.0.0.1:2000';
+} else if (process.env.NODE_ENV === 'production') {
+  masterUrl = process.env.PROTOCOL + process.env.MASTERHOST_PORT_2000_TCP_ADDR + ':' + process.env.MASTER_PORT;
+};
+
+console.log('workerController in helper', workerController);
 
 // Save action results to database
 const saveActionResultsToDB = (actionsResults, job) => {
@@ -40,17 +50,4 @@ const saveSpawnsToDB = (runresults, job) => {
     });
 };
 
-const responseFromMasterCallback = (error, response, body) => {
-  if (error) {
-    console.error(error);
-  } else if (body === 'done') {
-    // Shut off if no jobs are available
-    console.log('Jobs completed is ', jobsCompleted);
-    process.exit();
-  } else {
-    // Recursively ask for more work if available
-    handleJob(JSON.parse(body).job);
-  }
-};
-
-module.exports = { saveActionResultsToDB, saveSpawnsToDB, responseFromMasterCallback };
+module.exports = { saveActionResultsToDB, saveSpawnsToDB };
