@@ -84,14 +84,4 @@ describe('Worker', () => {
       done();
     });
   });
-
-  xdescribe('responseFromMasterCallback', () => {
-    it('should call handleJob if there are remaining jobs', (done) => {
-      done();
-    });
-
-    it('should exit if the master responds with done', (done) => {
-      done();
-    });
-  });
 });
