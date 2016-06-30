@@ -1,16 +1,5 @@
 const Action = require('../models/ActionsModel');
 const Spawn = require('../models/SpawnsModel');
-const workerController = require('./worker_controller');
-
-let masterUrl = '';
-
-if (process.env.NODE_ENV === 'development') {
-  masterUrl = 'http://127.0.0.1:2000';
-} else if (process.env.NODE_ENV === 'production') {
-  masterUrl = process.env.PROTOCOL + process.env.MASTERHOST_PORT_2000_TCP_ADDR + ':' + process.env.MASTER_PORT;
-};
-
-console.log('workerController in helper', workerController);
 
 // Save action results to database
 const saveActionResultsToDB = (actionsResults, job) => {
