@@ -4,6 +4,7 @@ const { handleJob, jobsCompleted } = require('../worker/worker_controller');
 
 // Save action results to database
 const saveActionResultsToDB = (actionsResults, job) => {
+  console.log('called to save Actions results to DB');
   for (let i = 0; i < actionsResults.length; i++) {
     const actionData = {
       statusCode: actionsResults[i].statusCode,
@@ -24,6 +25,7 @@ const saveActionResultsToDB = (actionsResults, job) => {
 };
 
 const saveSpawnsToDB = (runresults, job) => {
+  console.log('called to save Spawn results to DB');
   const spawnData = {
     totalTime: runresults.scenarioTime,
     id_scenario: job.scenarioID,

@@ -35,6 +35,7 @@ const handleJob = (jobs, masterUrl) => {
       ]
     }
     */
+      console.log('runresults', runresults);
       // For each job result, save actions to the actions database
       const actionsResults = runresults.transactionTimes;
       helpers.saveActionResultsToDB(actionsResults, job);
@@ -47,6 +48,7 @@ const handleJob = (jobs, masterUrl) => {
       jobsCompleted++;
     });
   });
+  console.log('after job execution');
 
   // Post results to master server
   request.post({
