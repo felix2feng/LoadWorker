@@ -6,11 +6,7 @@ const helpers = require('./helper');
 // Global Variable
 let jobsCompleted = 0;
 
-// TODO: CURRENTLY HARD CODED
-const resultAddress = 'http://localhost:8000/api/complete';
-const requestJob = 'http://localhost:8000/api/requestJob';
-
-const handleJob = jobs => {
+const handleJob = (jobs, masterUrl) => {
   /* Jobs input
   [
     {
@@ -23,6 +19,8 @@ const handleJob = jobs => {
     ...
   ]
   */
+  const requestUrl = masterUrl + '/api/requestJob';
+  const resultUrl = masterUrl + '/api/complete';
 
   console.log('Got some work from the server', jobs);
   const results = [];
@@ -37,6 +35,7 @@ const handleJob = jobs => {
       ]
     }
     */
+      console.log('runresults', runresults);
       // For each job result, save actions to the actions database
       const actionsResults = runresults.transactionTimes;
       helpers.saveActionResultsToDB(actionsResults, job);
@@ -49,16 +48,17 @@ const handleJob = jobs => {
       jobsCompleted++;
     });
   });
+  console.log('after job execution');
 
   // Post results to master server
   request.post({
-    url: resultAddress,
+    url: resultUrl,
     json: true,
     body: results,
   });
 
   // Request more work from master
-  request.post(requestJob, helpers.responseFromMasterCallback);
+  request.post(requestUrl, helpers.responseFromMasterCallback);
 };
 
 module.exports = { handleJob, jobsCompleted };

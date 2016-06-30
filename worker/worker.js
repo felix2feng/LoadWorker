@@ -22,10 +22,13 @@ const port = process.env.PORT || 5000;
 let masterUrl = '';
 
 if (process.env.NODE_ENV === 'development') {
-  masterUrl = 'http://127.0.0.1:2000/api/requestJob';
+  masterUrl = 'http://127.0.0.1:2000';
 } else if (process.env.NODE_ENV === 'production') {
-  masterUrl = process.env.PROTOCOL + process.env.MASTERHOST_PORT_2000_TCP_ADDR + ':' + process.env.MASTER_PORT + '/api/requestJob';
+  masterUrl = process.env.PROTOCOL + process.env.MASTERHOST_PORT_2000_TCP_ADDR + ':' + process.env.MASTER_PORT;
 }
+
+const requestUrl = masterUrl + '/api/requestJob';
+const resultUrl = masterUrl + '/api/complete';
 
 // Start Express Server
 const app = express();
@@ -37,8 +40,8 @@ app.use(bodyParser.json());
 // Server listens at specified port
 app.listen(app.get('port'), () => {
   console.log(`Worker server listening to port ${app.get('port')}`);
-  console.log('This is the IP Address I will post to', masterUrl);
-  request.post(masterUrl, (error, response, body) => {
+  console.log('This is the IP Address I will post to', requestUrl);
+  request.post(requestUrl, (error, response, body) => {
     if (error) {
       console.log(error);
     }
@@ -49,7 +52,7 @@ app.listen(app.get('port'), () => {
     } else if (body === undefined) {
       console.log('Body from master server is undefined');
     } else {
-      workerController.handleJob(JSON.parse(body).job);
+      workerController.handleJob(JSON.parse(body).job, masterUrl);
     }
   });
 });
