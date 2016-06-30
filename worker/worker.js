@@ -22,7 +22,7 @@ const port = process.env.PORT || 5000;
 let masterUrl = '';
 
 if (process.env.NODE_ENV === 'development') {
-  masterUrl = 'http://127.0.0.1:2000/api/requestJob';
+  masterUrl = 'http://127.0.0.1:2000';
 } else if (process.env.NODE_ENV === 'production') {
   masterUrl = process.env.PROTOCOL + process.env.MASTERHOST_PORT_2000_TCP_ADDR + ':' + process.env.MASTER_PORT;
 }
@@ -52,7 +52,7 @@ app.listen(app.get('port'), () => {
     } else if (body === undefined) {
       console.log('Body from master server is undefined');
     } else {
-      workerController.handleJob(JSON.parse(body).job, requestUrl);
+      workerController.handleJob(JSON.parse(body).job, masterUrl);
     }
   });
 });
