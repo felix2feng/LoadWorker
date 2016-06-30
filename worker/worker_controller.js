@@ -1,8 +1,7 @@
 // Dependencies
 const request = require('request');
 const scenariorunner = require('./scripts/scenario');
-const Action = require('../models/ActionsModel');
-const Spawn = require('../models/SpawnsModel');
+const helpers = require('./helper');
 
 // Global Variable
 let jobsCompleted = 0;
@@ -32,41 +31,18 @@ const handleJob = (jobs, masterUrl) => {
     runresults: {
       scenarioTime: timeToRunScenarioInMilliseconds,
       transactionTimes: [
-        [path, statusCode, elapsedTime, dataSizeInBytes, 'GET'],
+        {path, statusCode, elapsedTime, dataSizeInBytes, 'GET'},
       ]
     }
     */
       // For each job result, save actions to the actions database
       const actionsResults = runresults.transactionTimes;
-      for (let i = 0; i < actionsResults.length; i++) {
-        const actionData = {
-          statusCode: actionsResults[i].statusCode,
-          elapsedTime: actionsResults[i].elapsedTime,
-          id_scenario: job.scenarioID,
-        };
-        const newAction = new Action(actionData);
-        newAction.save()
-          .then(() => {
-            console.log('Successfully saved');
-          })
-          .catch(err => {
-            console.error(err);
-          });
-      }
+      helpers.saveActionResultsToDB(actionsResults, job);
 
       // Save to spawn database
-      const spawnData = {
-        totalTime: runresults.scenarioTime,
-        id_scenario: job.scenarioID,
-      };
-      const newSpawn = new Spawn(spawnData);
-      newSpawn.save()
-        .then(() => {
-          console.log('Successfully saved');
-        })
-        .catch(err => {
-          console.error(err);
-        });
+      helpers.saveSpawnsToDB(runresults, job);
+
+      // Add to results
       results.push(runresults);
       jobsCompleted++;
     });
@@ -80,17 +56,7 @@ const handleJob = (jobs, masterUrl) => {
   });
 
   // Request more work from master
-  request.post(requestUrl, (error, response, body) => {
-    if (error) {
-      console.error(error);
-    } else if (body === 'done') {
-      console.log('Jobs completed is ', jobsCompleted);
-      process.exit();
-    } else {
-      // Recursively ask for more work if available
-      handleJob(JSON.parse(body).job);
-    }
-  });
+  request.post(requestUrl, helpers.responseFromMasterCallback);
 };
 
-module.exports = { handleJob };
+module.exports = { handleJob, jobsCompleted };
