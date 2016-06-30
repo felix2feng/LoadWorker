@@ -1,6 +1,5 @@
 const Action = require('../models/ActionsModel');
 const Spawn = require('../models/SpawnsModel');
-const { handleJob, jobsCompleted } = require('../worker/worker_controller');
 
 // Save action results to database
 const saveActionResultsToDB = (actionsResults, job) => {
@@ -40,17 +39,4 @@ const saveSpawnsToDB = (runresults, job) => {
     });
 };
 
-const responseFromMasterCallback = (error, response, body) => {
-  if (error) {
-    console.error(error);
-  } else if (body === 'done') {
-    // Shut off if no jobs are available
-    console.log('Jobs completed is ', jobsCompleted);
-    process.exit();
-  } else {
-    // Recursively ask for more work if available
-    handleJob(JSON.parse(body).job);
-  }
-};
-
-module.exports = { saveActionResultsToDB, saveSpawnsToDB, responseFromMasterCallback };
+module.exports = { saveActionResultsToDB, saveSpawnsToDB };

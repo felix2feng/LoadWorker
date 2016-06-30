@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Modules
-const workerController = require('./worker_controller.js');
+const workerController = require('./worker_controller');
 
 // Global Variables: Need to update with correct port number
 const port = process.env.PORT || 5000;
