@@ -7,11 +7,7 @@ const Spawn = require('../models/SpawnsModel');
 // Global Variable
 let jobsCompleted = 0;
 
-// TODO: CURRENTLY HARD CODED
-const resultAddress = 'http://localhost:8000/api/complete';
-const requestJob = 'http://localhost:8000/api/requestJob';
-
-const handleJob = jobs => {
+const handleJob = (jobs, masterUrl) => {
   /* Jobs input
   [
     {
@@ -24,6 +20,8 @@ const handleJob = jobs => {
     ...
   ]
   */
+  const requestUrl = masterUrl + '/api/requestJob';
+  const resultUrl = masterUrl + '/api/complete';
 
   console.log('Got some work from the server', jobs);
   const results = [];
@@ -76,13 +74,13 @@ const handleJob = jobs => {
 
   // Post results to master server
   request.post({
-    url: resultAddress,
+    url: resultUrl,
     json: true,
     body: results,
   });
 
   // Request more work from master
-  request.post(requestJob, (error, response, body) => {
+  request.post(requestUrl, (error, response, body) => {
     if (error) {
       console.error(error);
     } else if (body === 'done') {
