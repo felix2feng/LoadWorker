@@ -57,17 +57,21 @@ const parse = (str) => {
 };
 
 const env = {};
-const execute = ({ action, args }, modifiers) =>
-  new Promise((resolve, reject) => {
-    // console.log('evaluation ', action);
+const execute = ({ action, args }, modifiers) => {
+  console.log('executing', action);
+  console.log('args', args);
+  console.log('modifiers', modifiers);
+  return new Promise((resolve, reject) => {
+    console.log('evaluation ', action);
     try {
-      // console.log('calling ', action, ' with args:', args);
+      console.log('calling ', action, ' with args:', args);
       env[action].apply(null, [modifiers].concat(args)).then(resolve).catch(reject);
     } catch (err) {
+      console.log('exec error', err);
       reject(err);
     }
   });
-
+}
 const run = (site, command) => {
   const actions = parse(command);
   if (actions === undefined) {
@@ -80,6 +84,9 @@ const run = (site, command) => {
   const transactionTimes = [];
   return Promise.resolve({ site, transactionTimes }).then(function loop(modifiers) {
     //  console.log(i);
+    console.log('in scenarion run loop');
+    console.log('i:', i);
+    console.log('actions:', actions);
     if (i < actions.length) {              // The post iteration increment
       return execute(actions[i++], modifiers).then(loop).catch((err) => {
         console.log('fail', err);
@@ -91,6 +98,7 @@ const run = (site, command) => {
         scenarioTime: endTime - startTime,
         transactionTimes: modifiers.transactionTimes,
       };
+      console.log('results: ', results);
       return Promise.resolve(results);
     }
   });
