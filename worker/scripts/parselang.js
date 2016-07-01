@@ -1,58 +1,52 @@
-// parselang
+//  parser.js
+//
 const PEG = require('pegjs');
 
-/*
-
-A scenario looks like this:
-site('localhost:4568')
-.login({username: 'bill', password: '1234'})
-.get('/')
-.get('/fileListing')
-.times(3).values({ "hello": "one"}).post('/newEntry')
-.times(3).random().select('footerLinks').click()
-.get('/logout');
-
-site('www.hackreactor.com')
-.loginJWT('/login', '', {username:'bill', password:'password'})
-.get('/');
-
-
-The parsing language will parse it to a list of actions and arguments
-
-[
-{action:'site', args:['localhost']},
-{action:'login', args:[{username: 'bill', password: '1234'}]}
-]
-
-*/
-
-
 const parserArguments = `
-start = Chain
-Chain = head:Cmd tail:(_ "." Cmd)* _ ";" {
-  var result = [head], i;
-  for (i = 0; i < tail.length; i++) {
-    result.push(tail[i][2]);
+start 
+  = nl* first:line rest:(nl+ data:line { return data; })* nl* { 
+    rest.unshift(first); return rest;
   }
-  return result;  
+    
+line = space first:command tail:(" " argument)* {
+  var params = [];
+  for (var i = 0; i < tail.length; i++) {
+    params.push(tail[i][1]);
+  }
+  return {type:'CallExpression', operator:first, params: params}
 }
-Cmd
- = head:[a-zA-Z]* "(" _  expr:args _ ")" {
-  return {action:head.join(""), args: expr}
+//
+argument "argument"
+  = func / JSON / number / string
+command "command"
+= head:[^\\t\\n\\r )]* {
+  return {type:"word", name:head.join("")};
 }
-args = head:str tail:(tailArgs)* {
-  if (!head) { return [] }
-  return [head].concat(tail.map(function(a) { return a }));
-}
-tailArgs = ("," _ head:str) { return head;}
+func = "(" space space first:command tail:(" " argument)* space ")" {
+  var params = [];
+  for (var i = 0; i < tail.length; i++) {
+    params.push(tail[i][1]);
+  }
+  return {type:'DelayExpression', operator:first, params: params}
 
-str = integer / "'" value:c "'" { return value; } / JSON / c
-JSON = head:("{" $[^}]* "}") { return head.join("");}
-integer = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
-c "char"
- = $[a-zA-Z0-9 :/{}.]*
-_ "whitespace" 
+ }
+string "string" = s:[^\\t\\n\\r() ]+ {
+  return {type:"value", value:s.join("")};
+}
+number "number" = num:[0-9]+ {
+return {type: "value", value:parseInt(num.join(""), 10)};
+}
+comment "comment"
+ = "#"+ [^\\n\\r]* { return ''; }
+JSON = head:("{" $[^}]* "}") { 
+  return {type:"value", value:head.join("")};
+}
+space "space" 
+  = [ ]*
+_ "whitespace"
   = [ \\t\\n\\r]*
+nl "newline"
+ = [\\n\\r]
 `;
 
 const parser = PEG.buildParser(parserArguments.trim());
