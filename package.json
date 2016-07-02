@@ -23,7 +23,8 @@
     "pegjs": "^0.9.0",
     "request": "^2.72.0",
     "require": "^2.4.20",
-    "sinon": "^1.17.4"
+    "sinon": "^1.17.4",
+    "zombie": "^4.2.1"
   },
   "devDependencies": {
     "babel-cli": "6.8.0",

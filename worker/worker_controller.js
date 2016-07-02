@@ -2,6 +2,7 @@
 const request = require('request');
 const scenariorunner = require('./scripts/scenario');
 const helpers = require('./helper');
+const Promise = require('bluebird');
 
 // Global Variable
 let jobsCompleted = 0;
@@ -24,8 +25,12 @@ const handleJob = (jobs, masterUrl) => {
 
   console.log('Got some work from the server', jobs);
   const results = [];
-  jobs.forEach(job => {
-    scenariorunner.run(job.targetUrl, job.script)
+
+
+
+  Promise.mapSeries(jobs, (job => {
+    console.log('run that job');
+    return scenariorunner.run(job.targetUrl, job.script)
     .then((runresults) => {
     /*
     runresults: {
@@ -46,32 +51,35 @@ const handleJob = (jobs, masterUrl) => {
       // Add to results
       results.push(runresults);
       jobsCompleted++;
+    })
+    .catch((e) => console.log('err:', e));
+  }))
+  .then(() => {
+    console.log('after job execution');
+
+    // Post results to master server
+    request.post({
+      url: resultUrl,
+      json: true,
+      body: results,
     });
+
+    const responseFromMasterCallback = (error, response, body) => {
+      if (error) {
+        console.error(error);
+      } else if (body === 'done') {
+        // Shut off if no jobs are available
+        console.log('Jobs completed is ', jobsCompleted);
+        process.exit();
+      } else {
+        // Recursively ask for more work if available
+        handleJob(JSON.parse(body).job, masterUrl);
+      }
+    };
+
+    // Request more work from master
+    request.post(requestUrl, responseFromMasterCallback);
   });
-  console.log('after job execution');
-
-  // Post results to master server
-  request.post({
-    url: resultUrl,
-    json: true,
-    body: results,
-  });
-
-  const responseFromMasterCallback = (error, response, body) => {
-    if (error) {
-      console.error(error);
-    } else if (body === 'done') {
-      // Shut off if no jobs are available
-      console.log('Jobs completed is ', jobsCompleted);
-      process.exit();
-    } else {
-      // Recursively ask for more work if available
-      handleJob(JSON.parse(body).job, masterUrl);
-    }
-  };
-
-  // Request more work from master
-  request.post(requestUrl, responseFromMasterCallback);
 };
 
 module.exports = { handleJob, jobsCompleted };
