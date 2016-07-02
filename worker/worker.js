@@ -10,14 +10,14 @@ const environment = require('dotenv');
 if (process.env.NODE_ENV === 'development') {
   environment.config({ path: './env/development.env' });
 } else if (process.env.NODE_ENV === 'production') {
-  environment.config({ path: './env/production.env' });
+  environment.config({ path: '../env/production.env' });
 }
 
 // Modules
 const workerController = require('./worker_controller');
 
 // Global Variables: Need to update with correct port number
-const port = process.env.PORT || 5000;
+const port = process.env.WORKER_PORT || 5000;
 
 let masterUrl = '';
 
