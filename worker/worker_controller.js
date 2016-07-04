@@ -26,8 +26,6 @@ const handleJob = (jobs, masterUrl) => {
   console.log('Got some work from the server', jobs);
   const results = [];
 
-
-
   Promise.mapSeries(jobs, (job => {
     console.log('run that job');
     return scenariorunner.run(job.targetUrl, job.script)
