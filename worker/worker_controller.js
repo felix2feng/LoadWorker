@@ -14,7 +14,7 @@ const handleJob = (jobs, masterUrl) => {
       scenarioID: req.body.scenarioID,
       scenario: req.body.scenarioName,
       user: req.body.id_user,
-      targetUrl: req.body.targetUrl,
+      targetURL: req.body.targetURL,
       script: req.body.script,
     },
     ...
@@ -25,8 +25,6 @@ const handleJob = (jobs, masterUrl) => {
 
   console.log('Got some work from the server', jobs);
   const results = [];
-
-
 
   Promise.mapSeries(jobs, (job => {
     console.log('run that job');

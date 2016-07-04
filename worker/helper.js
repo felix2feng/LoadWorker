@@ -3,7 +3,6 @@ const Spawn = require('../models/SpawnsModel');
 
 // Save action results to database
 const saveActionResultsToDB = (actionsResults, job) => {
-  console.log('called to save Actions results to DB');
   for (let i = 0; i < actionsResults.length; i++) {
     const actionData = {
       statusCode: actionsResults[i].statusCode,
@@ -15,7 +14,7 @@ const saveActionResultsToDB = (actionsResults, job) => {
     const newAction = new Action(actionData);
     newAction.save()
       .then(() => {
-        console.log('Successfully saved');
+        console.log('Successfully saved to Action DB');
       })
       .catch(err => {
         console.error(err);
@@ -24,7 +23,6 @@ const saveActionResultsToDB = (actionsResults, job) => {
 };
 
 const saveSpawnsToDB = (runresults, job) => {
-  console.log('called to save Spawn results to DB');
   const spawnData = {
     totalTime: runresults.scenarioTime,
     id_scenario: job.scenarioID,
@@ -32,7 +30,7 @@ const saveSpawnsToDB = (runresults, job) => {
   const newSpawn = new Spawn(spawnData);
   newSpawn.save()
     .then(() => {
-      console.log('Successfully saved');
+      console.log('Successfully saved to Spawns DB');
     })
     .catch(err => {
       console.error(err);
