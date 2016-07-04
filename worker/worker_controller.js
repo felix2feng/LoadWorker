@@ -14,7 +14,7 @@ const handleJob = (jobs, masterUrl) => {
       scenarioID: req.body.scenarioID,
       scenario: req.body.scenarioName,
       user: req.body.id_user,
-      targetUrl: req.body.targetUrl,
+      targetURL: req.body.targetURL,
       script: req.body.script,
     },
     ...
