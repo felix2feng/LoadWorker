@@ -5,9 +5,10 @@ const Spawn = require('../models/SpawnsModel');
 const saveActionResultsToDB = (actionsResults, job) => {
   for (let i = 0; i < actionsResults.length; i++) {
     const actionData = {
+      actionTaken: actionsResults[i].actionName[0],
       path: actionsResults[i].path,
       statusCode: actionsResults[i].statusCode,
-      elapsedTime: actionsResults[i].elapsedTime,
+      elapsedTimeAction: actionsResults[i].elapsedTime,
       id_scenario: job.scenarioID,
       httpVerb: actionsResults[i].httpVerb,
     };

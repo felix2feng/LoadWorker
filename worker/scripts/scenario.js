@@ -36,10 +36,10 @@ const env = {
         console.log('visit successful');
         const endTime = new Date();
         env.responseTimes.push({
+          actionName: 'get ' + path,
           path: env.browser.request.url,
           statusCode: env.browser.response.status,
           elapsedTime: endTime - startTime,
-          dataSizeInBytes: 0,
           httpVerb: env.browser.request.method,
         });
         resolve(env.browser);
@@ -58,10 +58,10 @@ const env = {
       env.browser.pressButton(selector).then(() => {
         const endTime = new Date();
         env.responseTimes.push({
+          actionName: 'pressButton ' +  selector,
           path: env.browser.request.url,
           statusCode: env.browser.response.status,
           elapsedTime: endTime - startTime,
-          dataSizeInBytes: 0,
           httpVerb: env.browser.request.method,
         });
         resolve(env.browser);
