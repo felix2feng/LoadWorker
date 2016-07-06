@@ -11,6 +11,8 @@ const globalFunctions = {
   lte: (arg1, arg2, env) => new Promise((resolve, reject) => resolve(arg1 <= arg2)),
   gte: (arg1, arg2, env) => new Promise((resolve, reject) => resolve(arg1 >= arg2)),
   log: (arg1, env) => new Promise((resolve, reject) => resolve(console.log(arg1))),
+  randomstring: (length, env) =>
+  new Promise((resolve, reject) => resolve(Math.random().toString(36).slice(2, +length + 2))),
   set: (variableName, primitiveValue, env) => {
     return new Promise((resolve, reject) => {
       if (variableName in env) {
