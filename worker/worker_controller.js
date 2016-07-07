@@ -68,6 +68,9 @@ const handleJob = (jobs, masterUrl) => {
       } else if (body === 'done') {
         // Shut off if no jobs are available
         console.log('Jobs completed is ', jobsCompleted);
+        request.post({
+          url: resultUrl,
+        });
         process.exit();
       } else {
         // Recursively ask for more work if available
